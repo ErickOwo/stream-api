@@ -9,6 +9,10 @@ const validateToken = require('./src/routes/validate-token')
 const platforms = require('./src/routes/platforms');
 const auth = require('./src/routes/auth');
 
+// import public routes
+const usersPublic = require('./src/routes/users-public')
+
+// initializing express and setting port
 const app = express();
 app.set('port', process.env.PORT || 3005);
 
@@ -33,6 +37,8 @@ app.use('/api/auth', validateToken, auth);
 // routes admin
 app.use('/api/admin', validateToken, platforms);
 
+// public routres
+app.use('/api/public', usersPublic);
 
 app.listen(app.get('port'), () => {
   console.log(`Servidor escuchando en el pueto ${app.get('port')}`);
