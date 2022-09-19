@@ -14,6 +14,13 @@ const PlatformSchema = new Schema({
     type: String,
     required: [true, 'password required']
   },
+  type: {
+    type: Number,
+    require: [true, 'type required']
+  },
+  customers: {
+    type: Array
+  }
 });
 
 module.exports = mongoose.models.Platform || mongoose.model('Platform', PlatformSchema);

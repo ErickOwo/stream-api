@@ -25,10 +25,24 @@ const schemaLoginAdmin = Joi.object({
   password: Joi.string().max(2048).required(),
 });
 
+// orders schemas
+const schemaOrders = Joi.object({
+  user: Joi.required(),
+  orderNumber: Joi.string().min(1).max(180).required(),
+  disneyProfiles: Joi.number().required(),
+  hboProfiles: Joi.number().required(),
+  primeProfiles: Joi.number().required(),
+  paramountProfiles: Joi.number().required(),
+  starProfiles: Joi.number().required(),
+  months: Joi.number().required(),
+  bankCode: Joi.number().required(),
+});
+
 module.exports = {
   schemaRegisterUser,
   schemaLoginUser,
   schemaRegisterAdmin,
   schemaLoginAdmin,
+  schemaOrders,
 }
 

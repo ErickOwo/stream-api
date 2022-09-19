@@ -1,0 +1,96 @@
+const express = require('express');
+const router = express.Router();
+const fs = require('fs-extra');
+
+//models
+const PublicUser = require('../models/PublicUser');
+const Order = require('../models/Order');
+
+// Joi schemas
+const { schemaOrders } = require('../utils/schemas-joi')
+
+const { addImage, deleteImage } = require('../utils/use-media');
+
+router.post('/', async (req, res) => {
+  try{
+    let { info } = req.body;
+    info = JSON.parse(info);
+    
+    const { error } = schemaOrders.validate(info);
+    if(error) return res.status(400).json({ error: error.details[0].message });
+
+    const { 
+      user,
+      orderNumber,
+      disneyProfiles,
+      hboProfiles,
+      primeProfiles,
+      paramountProfiles,
+      starProfiles,
+      months,
+      bankCode
+    } = info;
+
+    const userSaved = await PublicUser.findById(user.id);
+    if(!userSaved) res.status(401).json({message: 'Error de autenticación de usuario', type: 'error'})
+    userSaved._id = `${userSaved._id}`
+
+    if(!( userSaved._id == user.id 
+       && userSaved.name == user.name 
+       && userSaved.email == user.email)){
+        return res.status(401).json({message: 'Error de autenticación de usuario', type: 'error'})
+       }
+
+    let bank;
+
+    if(bankCode == 2) bank = 'BI';
+    else if(bankCode == 1) bank = 'Bantrab';
+    else bank = 'Banrural';
+
+    const result = await addImage(req.file.path, 'Stream Play/orders')
+    
+    const data = {
+      userCustomer: userSaved._id,
+      orderNumber,
+      disneyProfiles,
+      hboProfiles,
+      primeProfiles,
+      paramountProfiles,
+      starProfiles,
+      months,
+      bank,
+      imgURL: result.url,
+      public_id: result.public_id,      
+    }
+
+    const newObject = await new Order(data);
+
+    await newObject.save();
+
+    let orders = [];
+
+    if(userSaved.orders) orders = [...userSaved.orders, newObject._id]; 
+    else orders = [newObject.userCustomer._id];
+
+    await PublicUser.findByIdAndUpdate(
+      userSaved.id,
+      {
+        orders
+      },
+      {
+        new: true,
+        runValidators: true,
+      }
+    )
+
+    await fs.unlink(req.file.path);
+
+    return res.json({message: 'Objeto agregado correctamente', type: 'success'});
+  }
+  catch(error){
+    console.log(error)
+    return res.status(400).json({error})
+  }
+});
+
+module.exports = router;

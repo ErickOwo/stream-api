@@ -1,13 +1,15 @@
 const express = require('express');
 const router = express.Router();
 
+
+//models
 const User = require('../models/PublicUser');
 
 // essentials to authenticate
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
-const { schemaRegisterUser, schemaLoginUser  } = require('../utils/schemas-joi')
+const { schemaRegisterUser, schemaLoginUser  } = require('../utils/schemas-joi');
 
 router.post('/profile', async (req, res)=>{
   try{
@@ -39,7 +41,7 @@ router.post('/users', async (req, res)=>{
       password,
     })
 
-   user.save();
+   await user.save();
 
    return res.json({ error: null, message: "Usuario agregado correctamente"}); 
   

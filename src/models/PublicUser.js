@@ -9,6 +9,10 @@ const publicUserSchema = mongoose.Schema({
     type: String, 
     required: true,
   },
+  phone: {
+    type: String, 
+    required: true,
+  },
   password: {
     type: String, 
     required: true,
@@ -17,6 +21,16 @@ const publicUserSchema = mongoose.Schema({
     type: Date,
     default: Date.now,
   },
+  country: {
+    type: String,
+    default: 'Guatemala'
+  },
+  orders: {
+    type: Array
+  }, 
+  platforms: {
+    type: Array
+  }
 })
 
 module.exports = mongoose.models.PublicUser || mongoose.model('PublicUser', publicUserSchema);
