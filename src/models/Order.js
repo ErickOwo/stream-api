@@ -42,6 +42,9 @@ const OrderSchema = new Schema({
   acepted: {
     tipe: Boolean,
     default: false,
+  },
+  total: {
+    type: Number,
   }
 });
 

@@ -41,6 +41,17 @@ router.post('/', async (req, res) => {
       bankCode
     } = info;
 
+    const total = () => {
+      const descount = months == 2 ? 5 : months == 4 ? 10 : 0;
+      const platforms =
+        disneyProfiles * (25 - descount) +
+        hboProfiles * (25 - descount) +
+        primeProfiles * (25 - descount) +
+        paramountProfiles * (25 - descount) +
+        starProfiles * (25 - descount);
+      return platforms * months;
+    };
+
     const userSaved = await PublicUser.findById(user.id);
     if(!userSaved) res.status(401).json({message: 'Error de autenticación de usuario', type: 'error'})
     userSaved._id = `${userSaved._id}`
@@ -70,7 +81,8 @@ router.post('/', async (req, res) => {
       months,
       bank,
       imgURL: result.url,
-      public_id: result.public_id,      
+      public_id: result.public_id, 
+      total: total()     
     }
 
     const newObject = await new Order(data);
