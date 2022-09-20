@@ -37,6 +37,7 @@ router.post('/', async (req, res) => {
       primeProfiles,
       paramountProfiles,
       starProfiles,
+      netflixProfiles,
       months,
       bankCode
     } = info;
@@ -48,7 +49,8 @@ router.post('/', async (req, res) => {
         hboProfiles * (25 - descount) +
         primeProfiles * (25 - descount) +
         paramountProfiles * (25 - descount) +
-        starProfiles * (25 - descount);
+        starProfiles * (25 - descount) +
+        netflixProfiles * (60 - descount);
       return platforms * months;
     };
 
@@ -78,6 +80,7 @@ router.post('/', async (req, res) => {
       primeProfiles,
       paramountProfiles,
       starProfiles,
+      netflixProfiles,
       months,
       bank,
       imgURL: result.url,
