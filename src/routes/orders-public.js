@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const fs = require('fs-extra');
+const jwt = require('jsonwebtoken');
 
 //models
 const PublicUser = require('../models/PublicUser');
@@ -10,6 +11,15 @@ const Order = require('../models/Order');
 const { schemaOrders } = require('../utils/schemas-joi')
 
 const { addImage, deleteImage } = require('../utils/use-media');
+
+router.get('/', async (req, res) => {
+  const token = req.header('Authorization');
+  const decode = jwt.decode(token);
+  
+  const orders = await Order.find({userCustomer: decode.id}) 
+  orders.reverse();
+  res.send(orders)
+})
 
 router.post('/', async (req, res) => {
   try{

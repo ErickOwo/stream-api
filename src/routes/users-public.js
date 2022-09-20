@@ -3,7 +3,7 @@ const router = express.Router();
 
 
 //models
-const User = require('../models/PublicUser');
+const PublicUser = require('../models/PublicUser');
 
 // essentials to authenticate
 const bcrypt = require('bcrypt');
@@ -15,7 +15,7 @@ router.post('/profile', async (req, res)=>{
   try{
     const token = req.body.token;
     const decode = jwt.decode(token);
-    const isEmailExist = await User.findOne({email: decode.email});
+    const isEmailExist = await PublicUser.findOne({email: decode.email});
     if(isEmailExist && isEmailExist._id == decode.id) return res.send(decode);
     else throw('email no registrado');
   } catch(error){
@@ -28,13 +28,13 @@ router.post('/users', async (req, res)=>{
     const { error } = schemaRegisterUser.validate(req.body);
     if(error) return res.status(400).json({ error: error.details[0].message });
 
-    const isEmailExist = await User.findOne({ email: req.body.email });
+    const isEmailExist = await PublicUser.findOne({ email: req.body.email });
     if(isEmailExist) return res.status(400).json({ error: 'Correo electrónico ya registrado' });
 
     const salt = await bcrypt.genSalt(11);
     const password = await bcrypt.hash(req.body.password, salt);
 
-    const user = new User({
+    const user = new PublicUser({
       name: req.body.name,
       email: req.body.email,
       phone: req.body.phone,
@@ -52,7 +52,7 @@ router.post('/users', async (req, res)=>{
 
 router.post('/loginuserpublic', async (req, res) => {
 
-  const user = await User.findOne({ email: req.body.email });
+  const user = await PublicUser.findOne({ email: req.body.email });
   if(!user) return res.send({error: true, message: "Usuario o contraseña incorrecto"});
 
   const validatePassword = await bcrypt.compare(req.body.password, user.password);
@@ -67,11 +67,10 @@ router.post('/loginuserpublic', async (req, res) => {
     id: user._id,
   }, process.env.TOKEN_SECRET_PUBLIC);
   
-  return res.send({
+  return res.header('auth-token', access_token).json({ 
     error: null, 
     message: "Bienvenido", 
-    access_token
-  })
+    access_token });
 });
 
 module.exports = router;

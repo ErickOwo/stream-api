@@ -9,7 +9,7 @@ const path = require('path');
 
 // import adminRoures
 const login = require('./src/routes/login');
-const validateToken = require('./src/routes/validate-token')
+const { verifyToken, verifyPublicToken } = require('./src/routes/validate-token')
 
 const platforms = require('./src/routes/platforms');
 const auth = require('./src/routes/auth');
@@ -51,15 +51,15 @@ app.use(multer({storage}).single('media'));
 // authentication routes
 app.use('/api', login);
 
-app.use('/api/auth', validateToken, auth);
+app.use('/api/auth', verifyToken, auth);
 
 // routes admin
-app.use('/api/admin', validateToken, platforms);
-app.use('/api/admin/orders', validateToken, ordersAdmin);
+app.use('/api/admin', verifyToken, platforms);
+app.use('/api/admin/orders', verifyToken, ordersAdmin);
 
 // public routres
 app.use('/api/public', usersPublic);
-app.use('/api/public/orders', ordersPublic);
+app.use('/api/public/orders',verifyPublicToken, ordersPublic);
 
 app.listen(app.get('port'), () => {
   console.log(`Servidor escuchando en el pueto ${app.get('port')}`);

@@ -60,7 +60,7 @@ router.put('/', async (req, res) => {
       runValidators: true,
     })
 
-    return res.send({type: 'success', message: 'Object modified successful'});
+    return res.send({type: 'success', message: 'Pedido recibio con exito'});
   } catch (error) {
     console.log(error)
     res.status(400).send({type: 'error', message: error})
