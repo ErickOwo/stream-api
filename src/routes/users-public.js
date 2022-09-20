@@ -1,9 +1,9 @@
 const express = require('express');
 const router = express.Router();
 
-
 //models
 const PublicUser = require('../models/PublicUser');
+const Mail = require('../models/Mail')
 
 // essentials to authenticate
 const bcrypt = require('bcrypt');
@@ -22,6 +22,18 @@ router.post('/profile', async (req, res)=>{
     return res.status(400).send(error);
   }
 });
+
+router.post('/users/mail', async (req, res) => {
+  try{
+    const mail = new Mail(req.body);
+    await mail.save();
+    
+    return res.json({ success: true, mail });
+  }
+  catch(e){
+    return res.status(400).json({ success: false, error: e })
+  }
+})
 
 router.post('/users', async (req, res)=>{
   try {
