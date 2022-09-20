@@ -39,7 +39,7 @@ const OrderSchema = new Schema({
     type: Boolean,
     default: true
   },
-  acepted: {
+  accepted: {
     tipe: Boolean,
     default: false,
   },

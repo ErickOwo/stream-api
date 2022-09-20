@@ -10,7 +10,7 @@ const Order = require('../models/Order');
 // Joi schemas
 const { schemaOrders } = require('../utils/schemas-joi')
 
-const { addImage, deleteImage } = require('../utils/use-media');
+const { addImage } = require('../utils/use-media');
 
 router.get('/', async (req, res) => {
   const token = req.header('Authorization');
@@ -114,5 +114,6 @@ router.post('/', async (req, res) => {
     return res.status(400).json({error})
   }
 });
+
 
 module.exports = router;

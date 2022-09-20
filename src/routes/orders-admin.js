@@ -12,6 +12,8 @@ router.get('/pending', async (req, res) => {
   res.json(orders)
 })
 
+const { addImage, deleteImage } = require('../utils/use-media');
+
 router.put('/', async (req, res) => {
   try {  
     const { platforms, user, order } = req.body;
@@ -100,12 +102,45 @@ router.get('/nopending', async (req, res) => {
   res.json(orders)
 })
 
+router.get('/rejected', async (req, res) => {
+  const orders = await Order.find({accepted: false});
+  res.json(orders)
+})
+
 router.get('/user/:userid', async (req, res) => {
   const { userid } = req.params;
 
   const user = await PublicUser.findById(userid);
 
   res.json({user})
+})
+
+router.patch('/:order', async (req, res) => {
+  const { order } = req.params;
+  const orderDB = await Order.findByIdAndUpdate(
+    order,
+    {
+      pending: false,
+      accepted: false,
+    },{
+      new: true,
+      runValidators: true,
+    }
+  )
+  res.send('Order Rejected');
+})
+
+router.delete('/:order', async (req, res) => {
+  try{
+    const { order } = req.params;
+    const orderDB = await Order.findByIdAndDelete(order);
+    
+    await deleteImage(orderDB.public_id);
+    res.send('Order Deleted');
+  }
+  catch(error){
+    return res.status(400).json({ error });
+  }
 })
 
 module.exports = router;
