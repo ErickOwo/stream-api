@@ -48,7 +48,17 @@ const OrderSchema = new Schema({
   },
   total: {
     type: Number,
-  }
+  },
+  active: {
+    tipe: Boolean,
+    default: false,
+  },
+  startDate: {
+    type: String,
+  },
+  endDate: {
+    type: String,
+  },
 });
 
 module.exports = mongoose.models.Order || mongoose.model('Order', OrderSchema);

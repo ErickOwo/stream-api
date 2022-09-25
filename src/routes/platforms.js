@@ -82,7 +82,7 @@ router.put('/platforms/:platform_id', async (req, res)=>{
       }
     );
 
-    if(!platform) res.status(404).json({success: false, error: 'No se encontró la plataforma'})
+    if(!platform) return res.status(404).json({success: false, error: 'No se encontró la plataforma'})
     
     return res.json({ success: true, platform });
   } catch(error) {

@@ -16,8 +16,9 @@ const { addImage, deleteImage } = require('../utils/use-media');
 
 router.put('/', async (req, res) => {
   try {  
-    const { platforms, user, order } = req.body;
-  
+    
+    const { platforms, user, order, startDate, endDate } = req.body;
+
     let userSaved = await PublicUser.findById(user._id);
   
     if(!userSaved) res.status(401).json({message: 'Error de autenticación de usuario', type: 'error'})
@@ -57,12 +58,14 @@ router.put('/', async (req, res) => {
       }) } 
     });
 
-    await Order.findByIdAndUpdate(order, {accepted: true, pending: false}, {
+    // Modificate
+
+    await Order.findByIdAndUpdate(order, {accepted: true, pending: false, active: true, startDate, endDate }, {
       new: true,
       runValidators: true,
     })
 
-    return res.send({type: 'success', message: 'Pedido recibio con exito'});
+    return res.send({type: 'success', message: 'Order accepted'});
   } catch (error) {
     console.log(error)
     res.status(400).send({type: 'error', message: error})

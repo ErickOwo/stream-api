@@ -25,9 +25,6 @@ const publicUserSchema = mongoose.Schema({
     type: String,
     default: 'Guatemala'
   },
-  orders: {
-    type: Array
-  }, 
   platforms: {
     type: Array
   }

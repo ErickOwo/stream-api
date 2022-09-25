@@ -91,26 +91,10 @@ router.post('/', async (req, res) => {
     const newObject = await new Order(data);
 
     await newObject.save();
-
-    let orders = [];
-
-    if(userSaved.orders) orders = [...userSaved.orders, newObject._id]; 
-    else orders = [newObject.userCustomer._id];
-
-    await PublicUser.findByIdAndUpdate(
-      userSaved.id,
-      {
-        orders
-      },
-      {
-        new: true,
-        runValidators: true,
-      }
-    )
-
+   
     await fs.unlink(req.file.path);
 
-    return res.json({message: 'Objeto agregado correctamente', type: 'success'});
+    return res.json({message: 'Pedido Realizado con éxito', type: 'success'});
   }
   catch(error){
     console.log(error)
