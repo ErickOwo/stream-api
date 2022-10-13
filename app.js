@@ -14,7 +14,9 @@ const { verifyToken, verifyPublicToken } = require('./src/routes/validate-token'
 const platforms = require('./src/routes/platforms');
 const auth = require('./src/routes/auth');
 
+// import admin routes
 const ordersAdmin = require('./src/routes/orders-admin');
+const usersAdmin = require('./src/routes/users-admin'); 
 
 // import public routes
 const usersPublic = require('./src/routes/users-public');
@@ -56,6 +58,7 @@ app.use('/api/auth', verifyToken, auth);
 // routes admin
 app.use('/api/admin', verifyToken, platforms);
 app.use('/api/admin/orders', verifyToken, ordersAdmin);
+app.use('/api/admin/users', verifyToken, usersAdmin);
 
 // public routres
 app.use('/api/public', usersPublic);
