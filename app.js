@@ -6,7 +6,6 @@ const multer = require('multer');
 const { v4: uuidv4 } = require('uuid');
 const path = require('path');
 
-
 // import adminRoures
 const login = require('./src/routes/login');
 const { verifyToken, verifyPublicToken } = require('./src/routes/validate-token')
@@ -21,6 +20,7 @@ const usersAdmin = require('./src/routes/users-admin');
 // import public routes
 const usersPublic = require('./src/routes/users-public');
 const ordersPublic = require('./src/routes/orders-public');
+const passwordsPublic = require('./src/routes/passwords-public');
 
 // initializing express and setting port
 const app = express();
@@ -32,7 +32,7 @@ require('dotenv').config();
 const uri = `mongodb+srv://${process.env.USER}:${process.env.PASSWORD}@cluster0.fl5iae9.mongodb.net/${process.env.DBNAME}?retryWrites=true&w=majority`;
 
 mongoose.connect(uri, {useNewUrlParser: true}).then(res =>{
-  console.log('data base connected')
+  console.log('data base connected');
 })
 
 // Midlewares
@@ -63,7 +63,8 @@ app.use('/api/admin/users', verifyToken, usersAdmin);
 // public routres
 app.use('/api/public', usersPublic);
 app.use('/api/public/orders',verifyPublicToken, ordersPublic);
+app.use('/api/public/passwords', verifyPublicToken, passwordsPublic);
 
 app.listen(app.get('port'), () => {
-  console.log(`Servidor escuchando en el pueto ${app.get('port')}`);
+  console.log(`Server on port ${app.get('port')}`);
 })
