@@ -1,5 +1,6 @@
 const express = require('express');
 const Platform = require('../models/Platform')
+const PublicUser = require('../models/PublicUser')
 
 const router = express.Router();
 
@@ -63,7 +64,18 @@ router.get('/platforms/:platform_id', async (req, res)=>{
   try{
     const { platform_id } = req.params;
     const platform = await Platform.findById(platform_id);
-    return res.json({platform});
+    const customers = [];
+    
+    if(!platform.customers || platform.customers.length == 0 ) return res.send({platform, customers});
+
+    for(let i=0; i < platform.customers.length; i++){
+      const customerDB = await PublicUser.findById(platform.customers[i]);
+      customers.push(customerDB);     
+      
+      if(i == platform.customers.length - 1) {
+        return res.send({platform, customers});
+      }
+    };
   } catch(error) {
     return res.status(400).json({ success: false, error });
   }

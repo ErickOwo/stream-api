@@ -45,13 +45,13 @@ router.put('/', async (req, res) => {
       platformResult = await Platform.findById(platform);
       if(platformResult.customers) {
         await Platform.findByIdAndUpdate(platformResult._id, {
-        customers: [...platformResult.customers, user ]
+        customers: [...platformResult.customers, user._id ]
       }, {
         new: true,
         runValidators: true,
       })} else {
         await Platform.findByIdAndUpdate(platformResult._id, {
-        customers: [ user ]
+        customers: [ user._id ]
       }, {
         new: true,
         runValidators: true,
