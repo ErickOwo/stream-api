@@ -34,6 +34,7 @@ const schemaOrders = Joi.object({
   primeProfiles: Joi.number().required(),
   paramountProfiles: Joi.number().required(),
   starProfiles: Joi.number().required(),
+  spotifyProfiles: Joi.number().required(),
   netflixProfiles: Joi.number().required(),
   months: Joi.number().required(),
   bankCode: Joi.number().required(),

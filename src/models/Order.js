@@ -26,6 +26,9 @@ const OrderSchema = new Schema({
   netflixProfiles: {
     type: Number,
   },
+  spotifyProfiles: {
+    type: Number,
+  },
   months: {
     type: Number,
   },

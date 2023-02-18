@@ -38,6 +38,7 @@ router.post('/', async (req, res) => {
       paramountProfiles,
       starProfiles,
       netflixProfiles,
+      spotifyProfiles,
       months,
       bankCode
     } = info;
@@ -50,6 +51,7 @@ router.post('/', async (req, res) => {
         primeProfiles * (25 - descount) +
         paramountProfiles * (25 - descount) +
         starProfiles * (25 - descount) +
+        spotifyProfiles * (30 - descount) +
         netflixProfiles * (40 - descount);
       return platforms * months;
     };
@@ -65,8 +67,9 @@ router.post('/', async (req, res) => {
        }
 
     let bank;
-
-    if(bankCode == 2) bank = 'BI';
+    
+    if(bankCode == 3) bank = 'BAC';
+    else if(bankCode == 2) bank = 'BI';
     else if(bankCode == 1) bank = 'Bantrab';
     else bank = 'Banrural';
 
@@ -81,6 +84,7 @@ router.post('/', async (req, res) => {
       paramountProfiles,
       starProfiles,
       netflixProfiles,
+      spotifyProfiles,
       months,
       bank,
       imgURL: result.url,

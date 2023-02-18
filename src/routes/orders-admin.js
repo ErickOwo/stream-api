@@ -60,7 +60,13 @@ router.put('/', async (req, res) => {
 
     // Modificate
 
-    await Order.findByIdAndUpdate(order, {accepted: true, pending: false, active: true, startDate, endDate }, {
+    await Order.findByIdAndUpdate(
+      order, {
+        accepted: true, 
+        pending: false, 
+        active: true, 
+        startDate, 
+        endDate }, {
       new: true,
       runValidators: true,
     })
