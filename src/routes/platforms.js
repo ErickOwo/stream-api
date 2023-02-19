@@ -1,10 +1,13 @@
 const express = require('express');
+const { filter } = require('rxjs');
+const router = express.Router();
+const { v4: uuidv4 } = require('uuid');
+
+// Database Conection
 const Platform = require('../models/Platform')
 const PublicUser = require('../models/PublicUser')
 
-const router = express.Router();
-
-router.get('/platforms', async (req, res)=>{
+router.get('/', async (req, res)=>{
   try{
     const platforms = await Platform.find();
     return res.json(platforms);
@@ -13,7 +16,7 @@ router.get('/platforms', async (req, res)=>{
   }
 });
 
-router.get('/platforms/asign', async (req, res)=>{
+router.get('/asign', async (req, res)=>{
   try{
     const platforms = await Platform.find();
 
@@ -50,7 +53,7 @@ router.get('/platforms/asign', async (req, res)=>{
   }
 });
 
-router.post('/platforms', async (req, res)=>{
+router.post('/', async (req, res)=>{
   try {
     const platform = new Platform(req.body);
     await platform.save();
@@ -60,7 +63,7 @@ router.post('/platforms', async (req, res)=>{
   }
 });
 
-router.get('/platforms/:platform_id', async (req, res)=>{
+router.get('/:platform_id', async (req, res)=>{
   try{
     const { platform_id } = req.params;
     const platform = await Platform.findById(platform_id);
@@ -81,7 +84,7 @@ router.get('/platforms/:platform_id', async (req, res)=>{
   }
 });
 
-router.put('/platforms/:platform_id', async (req, res)=>{
+router.put('/:platform_id', async (req, res)=>{
   try{
     const { platform_id } = req.params;
     
@@ -102,7 +105,71 @@ router.put('/platforms/:platform_id', async (req, res)=>{
   }
 });
 
-router.delete('/platforms/:platform_id', async (req, res)=>{
+router.post('/customer/:id', async(req, res)=>{
+  data = req.body;
+  const {id} = req.params;
+
+  let userSaved = await PublicUser.find({email: data.email});
+  let platformSaved = await Platform.findById(id)
+  let user
+
+  if(userSaved.length == 0){
+    data.password = uuidv4()
+    data.platforms = [`${platformSaved._id}`]
+    user = new PublicUser(data)
+    await user.save()
+  } else {
+    user = await PublicUser.findByIdAndUpdate(
+      userSaved[0]._id, {
+      platforms: [...userSaved[0].platforms, `${platformSaved._id}` ]
+    }, {
+      new: true,
+      runValidators: true,
+    })
+  }
+  if(platformSaved.customers) {
+    await Platform.findByIdAndUpdate(platformSaved._id, {
+      customers: [...platformSaved.customers, `${user._id}` ]
+    }, {
+      new: true,
+      runValidators: true,
+    })} else {
+      await Platform.findByIdAndUpdate(platformSaved._id, {
+      customers: [ `${user._id}` ]
+    }, {
+      new: true,
+      runValidators: true,
+  })
+  
+ }  
+ res.send('data received')
+})
+
+router.put('/customer/:id', async(req, res)=>{
+  const data = req.body 
+  const { id } = req.params
+
+  const platformSaved = await Platform.findById(id);
+  const userSaved = await PublicUser.findById(data.id);
+
+  await Platform.findByIdAndUpdate(id, {
+    customers: await platformSaved.customers.filter(customer => customer != data.id)
+  }, {
+    new: true,
+    runValidators: true,
+  })
+  
+  await PublicUser.findByIdAndUpdate(data.id, {
+    platforms: await userSaved.platforms.filter(platform => platform != id)
+  }, {
+    new: true,
+    runValidators: true,
+  })
+
+  res.send('Customer removed')
+})
+
+router.delete('/:platform_id', async (req, res)=>{
   try{
     const { platform_id } = req.params;
     

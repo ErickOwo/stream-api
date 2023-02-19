@@ -56,7 +56,7 @@ app.use('/api', login);
 app.use('/api/auth', verifyToken, auth);
 
 // routes admin
-app.use('/api/admin', verifyToken, platforms);
+app.use('/api/admin/platforms', verifyToken, platforms);
 app.use('/api/admin/orders', verifyToken, ordersAdmin);
 app.use('/api/admin/users', verifyToken, usersAdmin);
 

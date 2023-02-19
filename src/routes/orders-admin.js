@@ -30,11 +30,11 @@ router.put('/', async (req, res) => {
     }
 
     if(userSaved.platforms) userSaved = await PublicUser.findByIdAndUpdate(user._id, {
-      platforms: [...userSaved.platforms, ...platforms]
-    }, {
-      new: true,
-      runValidators: true,
-    }); else userSaved = await PublicUser.findByIdAndUpdate(user._id, {
+        platforms: [...userSaved.platforms, ...platforms]
+      }, {
+        new: true,
+        runValidators: true,
+      }); else userSaved = await PublicUser.findByIdAndUpdate(user._id, {
       platforms: platforms
     }, {
       new: true,
