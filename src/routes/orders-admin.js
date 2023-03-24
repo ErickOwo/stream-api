@@ -116,6 +116,11 @@ router.get('/rejected', async (req, res) => {
   res.json(orders)
 })
 
+router.get('/accepted', async (req, res) => {
+  const orders = await Order.find({accepted: true});
+  res.json(orders)
+})
+
 router.get('/user/:userid', async (req, res) => {
   const { userid } = req.params;
 
