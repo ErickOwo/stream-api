@@ -27,6 +27,14 @@ const publicUserSchema = mongoose.Schema({
   },
   platforms: {
     type: Array
+  },
+  idRecover: {
+    type: String,
+    default: null
+  },
+  dateRecover: {
+    type: Date,
+    default: null
   }
 })
 

@@ -7,8 +7,8 @@ const transporter = nodemailer.createTransport({
   port: 465,
   secure: true, // true for 465, false for other ports
   auth: {
-    user: 'e12antonio@gmail.com', // generated ethereal user
-    pass: 'mnxzxltbxuezlgrr', // generated ethereal password
+    user: 'streamplaybussines@gmail.com', // generated ethereal user
+    pass: 'pzukgfmevysbcubs', // generated ethereal password
   },
 });
 
@@ -18,7 +18,7 @@ const sendEmail = (people, subject, message) =>{
   
   people.forEach( async (person, index) =>{
     const info = await transporter.sendMail({
-      from: '"SportTown" <e12antonio@gmail.com>', // sender address
+      from: '"Stream Play" <streamplaybussines@gmail.com>', // sender address
       to: person.email, // list of receivers
       subject: subject, // Subject line
       text: message, // plain text body
