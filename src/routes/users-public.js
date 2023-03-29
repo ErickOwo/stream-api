@@ -98,19 +98,20 @@ router.post('/users/recoverpassword', async (req, res) =>{
   try {
     const { error } = schemaRecovery.validate(req.body);
     if(error) return res.status(400).json({ error: error.details[0].message });
+    console.log(req.body)
     const userDB = await PublicUser.findOne({ email: req.body.email });
     if(!userDB) return res.status(400).json({ error: 'Usuario no registrado.' });
     let idRecover = uuidv4()
     idRecover = idRecover.replaceAll('-', `${parseInt(Math.random() * 10)}`)
 
-    await PublicUser.findOneAndUpdate(userDB._id, {
+    await PublicUser.findByIdAndUpdate(userDB._id, {
       idRecover,
       dateRecover: Date.now()
     }, {
       new: true,
       runValidators: true,
     })
-
+    
     const htmlCode = `
       <div style="padding: 2px; display: flex; flex-direction: column;">
         <h2>Activación de tu nueva contraseña de Stream play</h2>
@@ -137,12 +138,12 @@ router.post('/users/changepassword/:recoverid', async (req, res) =>{
   const recoverid = req.params.recoverid;
  
   const userDB = await PublicUser.findOne({idRecover: recoverid})
-  if(!userDB) return res.status(400).json({ error: 'Enlace expirado. Revisa tu correo y busca correo reciente de cambio de contraseña o vuelve a socitar un cambio de contraseña.' });
+  if(!userDB) return res.status(400).json({ error: 'Enlace expirado. Revisa tu correo y busca un correo reciente de cambio de contraseña o vuelve a solicitar un cambio de contraseña.' });
 
   const salt = await bcrypt.genSalt(11);
   const password = await bcrypt.hash(req.body.password, salt);
 
-  await PublicUser.findOneAndUpdate(userDB._id, {
+  await PublicUser.findByIdAndUpdate(userDB._id, {
     idRecover: null,
     dateRecover: null,
     password
