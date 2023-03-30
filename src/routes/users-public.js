@@ -98,7 +98,6 @@ router.post('/users/recoverpassword', async (req, res) =>{
   try {
     const { error } = schemaRecovery.validate(req.body);
     if(error) return res.status(400).json({ error: error.details[0].message });
-    console.log(req.body)
     const userDB = await PublicUser.findOne({ email: req.body.email });
     if(!userDB) return res.status(400).json({ error: 'Usuario no registrado.' });
     let idRecover = uuidv4()
