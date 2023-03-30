@@ -125,9 +125,9 @@ router.post('/users/recoverpassword', async (req, res) =>{
       </div>
     `
 
-    sendEmail([{email: req.body.email}], 'Activación de tu nueva contraseña de Stream Play', htmlCode)
+    const info = sendEmail([{email: req.body.email}], 'Activación de tu nueva contraseña de Stream Play', htmlCode)
 
-    return res.send({text: 'Se ha enviado un correo a tu dirección de correo electrónico con instrucciones para restaurar la contraseña, si es que existe en nuestro sistema.', type:'success'})
+    return res.send({text: info, type:'success'})
   } catch(error) {
     return res.status(400).json(error);
   } 

@@ -45,9 +45,14 @@ const sendEmail = (people, subject, message) =>{
         subject: subject, // Subject line
         text: message, // plain text body
         html: message, // html body
+      }, (err, res) =>{
+        if (err) {
+          throw new Error(err)
+        } 
+        return res
       });
     })
-    return;
+    return info;
   })
   
 }
