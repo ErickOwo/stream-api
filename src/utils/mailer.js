@@ -47,12 +47,10 @@ const sendEmail = (people, subject, message) =>{
         html: message, // html body
       }, (err, res) =>{
         if (err) {
-          throw new Error(err)
+          console.log(err)
         } 
-        return res
       });
     })
-    return info;
   })
   
 }
