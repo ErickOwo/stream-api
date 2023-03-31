@@ -1,6 +1,7 @@
 const express = require('express');
 const wbm = require('../utils/wbm');
 const router = express.Router();
+const fs = require('fs-extra');
 
 // models
 const Order = require('../models/Order');
@@ -129,9 +130,16 @@ router.get('/user/:userid', async (req, res) => {
   res.json({user})
 })
 
+router.get('/:order', async (req, res) => {
+  const { order } = req.params;
+  const orderDB = await Order.findById(order)
+  const publicUser = await PublicUser.findById(orderDB.userCustomer)
+  res.send({orderDB, publicUser});
+})
+
 router.patch('/:order', async (req, res) => {
   const { order } = req.params;
-  const orderDB = await Order.findByIdAndUpdate(
+  await Order.findByIdAndUpdate(
     order,
     {
       pending: false,
@@ -155,6 +163,27 @@ router.delete('/:order', async (req, res) => {
   catch(error){
     return res.status(400).json({ error });
   }
+})
+
+router.patch('/update/:order', async(req, res)=>{
+  const orderID = req.params.order
+  const orderDB = await Order.findById(orderID)
+  await deleteImage(orderDB.public_id);
+  const result = await addImage(req.file.path, 'Stream Play/orders')
+  await Order.findByIdAndUpdate(
+    orderDB._id,
+    {
+      startDate: new Date(req.body.startDate),
+      endDate: new Date(req.body.endDate),
+      imgURL: result.url,
+      public_id: result.public_id, 
+    }, {
+      new: true,
+      runValidators: true,
+    }
+  )
+  await fs.unlink(req.file.path);
+  res.send({text: 'Changes realized successfully', type: 'success'})
 })
 
 module.exports = router;
