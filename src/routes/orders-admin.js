@@ -2,6 +2,7 @@ const express = require('express');
 const wbm = require('../utils/wbm');
 const router = express.Router();
 const fs = require('fs-extra');
+const {v4: uuidv4} = require('uuid')
 
 // models
 const Order = require('../models/Order');
@@ -66,8 +67,8 @@ router.put('/', async (req, res) => {
         accepted: true, 
         pending: false, 
         active: true, 
-        startDate, 
-        endDate }, {
+        startDate: new Date(startDate),
+        endDate: new Date(endDate) }, {
       new: true,
       runValidators: true,
     })
@@ -184,6 +185,154 @@ router.patch('/update/:order', async(req, res)=>{
   )
   await fs.unlink(req.file.path);
   res.send({text: 'Changes realized successfully', type: 'success'})
+})
+
+router.post('/create', async(req, res)=>{
+  try {
+    const {
+      name,
+      email,
+      phone,
+      platforms,
+      startDate,
+      endDate,
+      data,
+      bankCode,
+      months,
+      total    
+    } = req.body
+  
+    const dataToRead = JSON.parse(data)
+    const {
+      disneyProfiles,
+      hboProfiles,
+      primeProfiles,
+      paramountProfiles,
+      starProfiles,
+      netflixProfiles,
+      spotifyProfiles
+    }  = dataToRead
+  
+    let bank;
+      
+    if(bankCode == 3) bank = 'BAC';
+    else if(bankCode == 2) bank = 'BI';
+    else if(bankCode == 1) bank = 'Bantrab';
+    else bank = 'Banrural';
+  
+    const result = await addImage(req.file.path, 'Stream Play/orders')
+  
+    const dataOrder = {
+      orderNumber: uuidv4(),
+      pending: false,
+      disneyProfiles,
+      hboProfiles,
+      primeProfiles,
+      paramountProfiles,
+      starProfiles,
+      netflixProfiles,
+      spotifyProfiles,
+      months,
+      bank,
+      imgURL: result.url,
+      public_id: result.public_id, 
+      total,
+      startDate: new Date(startDate),
+      endDate: new Date(endDate),
+    }
+
+    const userSaved = await PublicUser.findOne({email});
+    if(!userSaved){ 
+      // user unexist
+      return res.send({text: 'Order created successfully', type: 'success'})
+    } else{
+       dataOrder.userCustomer  = userSaved._id
+
+      // updating platforms in user
+      if(typeof platforms == 'string'){
+        if(userSaved.platforms) await PublicUser.findByIdAndUpdate(userSaved._id, {
+          platforms: [...userSaved.platforms, platforms]
+        }, {
+          new: true,
+          runValidators: true,
+        }); else await PublicUser.findByIdAndUpdate(userSaved._id, {
+        platforms: platforms
+        }, {
+          new: true,
+          runValidators: true,
+        });
+      } else {
+        if(userSaved.platforms) await PublicUser.findByIdAndUpdate(userSaved._id, {
+          platforms: [...userSaved.platforms, ...platforms]
+        }, {
+          new: true,
+          runValidators: true,
+        }); else await PublicUser.findByIdAndUpdate(userSaved._id, {
+        platforms: platforms
+        }, {
+          new: true,
+          runValidators: true,
+        });
+      }
+      
+      // updating platforms adding the user
+      if(typeof platforms == 'string'){
+        platformResult = await Platform.findById(platforms);
+        if(platformResult.customers) {
+          await Platform.findByIdAndUpdate(platformResult._id, {
+          customers: [...platformResult.customers, userSaved._id ]
+        }, {
+          new: true,
+          runValidators: true,
+        })} else {
+          await Platform.findByIdAndUpdate(platformResult._id, {
+          customers: [ userSaved._id ]
+        }, {
+          new: true,
+          runValidators: true,
+        }) }
+      } else {
+        platforms.map( async platform => {
+          platformResult = await Platform.findById(platform);
+          if(platformResult.customers) {
+            await Platform.findByIdAndUpdate(platformResult._id, {
+            customers: [...platformResult.customers, userSaved._id ]
+          }, {
+            new: true,
+            runValidators: true,
+          })} else {
+            await Platform.findByIdAndUpdate(platformResult._id, {
+            customers: [ userSaved._id ]
+          }, {
+            new: true,
+            runValidators: true,
+          }) } 
+        });
+      }
+      //creating order
+      const newObject = await new Order(dataOrder);
+  
+      const orderSaved= await newObject.save();
+     
+      await Order.findByIdAndUpdate(
+        orderSaved, {
+          accepted: true, 
+          active: true,
+        }, {
+        new: true,
+        runValidators: true,
+      })
+  
+  
+      await fs.unlink(req.file.path);
+      return res.send({text: 'Order created successfully', type: 'success'})
+      
+    }
+  }
+  catch (e){
+    console.log(e)
+    return res.send({text: 'Order failed', type: 'success'}).status(400)
+  }
 })
 
 module.exports = router;
