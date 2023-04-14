@@ -16,9 +16,9 @@ router.get('/', async (req, res) => {
   for(let i=0; i < userData.platforms.length; i++) {
     const platform = await Platform.findById(userData.platforms[i]);
     platforms.push(platform);
-    if(i == userData.platforms.length - 1) res.send(platforms);
+    if(i == userData.platforms.length - 1) return res.send(platforms);
   }
-
+  return res.send(platforms);
 });
 
 
