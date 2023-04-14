@@ -2,6 +2,7 @@ const express = require('express');
 const PublicUser = require('../models/PublicUser');
 const Order = require('../models/Order');
 const Platform = require('../models/Platform');
+const Profile = require('../models/Profile');
 
 const router = express.Router();
 
@@ -20,8 +21,14 @@ router.get('/orders/:user', async (req, res)=>{
   res.send(order);
 })
 
-router.get('/platforms/:platform', async (req, res)=>{
-  const platform = await Platform.findById(req.params.platform);
+router.get('/profiles/:user', async (req, res)=>{
+  const platform = await Profile.find({customerId: req.params.user})
+    .populate('platformId',{
+      title: 1,
+      type: 1,
+      email: 1,
+      password: 1
+    }, )
   res.send(platform);
 })
 

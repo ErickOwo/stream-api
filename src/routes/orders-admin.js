@@ -8,6 +8,7 @@ const {v4: uuidv4} = require('uuid')
 const Order = require('../models/Order');
 const PublicUser = require('../models/PublicUser');
 const Platform = require('../models/Platform')
+const Profile = require('../models/Profile')
 
 router.get('/pending', async (req, res) => {
   const orders = await Order.find({pending: true});
@@ -31,36 +32,16 @@ router.put('/', async (req, res) => {
       return res.status(401).json({message: 'Error de autenticación de usuario', type: 'error'})
     }
 
-    if(userSaved.platforms) userSaved = await PublicUser.findByIdAndUpdate(user._id, {
-        platforms: [...userSaved.platforms, ...platforms]
-      }, {
-        new: true,
-        runValidators: true,
-      }); else userSaved = await PublicUser.findByIdAndUpdate(user._id, {
-      platforms: platforms
-    }, {
-      new: true,
-      runValidators: true,
-    });
-  
-    userSaved.platforms.map( async platform => {
-      platformResult = await Platform.findById(platform);
-      if(platformResult.customers) {
-        await Platform.findByIdAndUpdate(platformResult._id, {
-        customers: [...platformResult.customers, user._id ]
-      }, {
-        new: true,
-        runValidators: true,
-      })} else {
-        await Platform.findByIdAndUpdate(platformResult._id, {
-        customers: [ user._id ]
-      }, {
-        new: true,
-        runValidators: true,
-      }) } 
-    });
+    for (let profile of platforms){
+      const profileToSave = await new Profile({
+        customerId: `${userSaved._id}`,
+        platformId: profile
+      })
 
-    // Modificate
+      profileToSave.save()
+    }    
+
+    //Modificate
 
     await Order.findByIdAndUpdate(
       order, {
@@ -244,71 +225,32 @@ router.post('/create', async(req, res)=>{
     const userSaved = await PublicUser.findOne({email});
     if(!userSaved){ 
       // user unexist
+      console.log('jaja')
       return res.send({text: 'Order created successfully', type: 'success'})
     } else{
        dataOrder.userCustomer  = userSaved._id
 
-      // updating platforms in user
+      // creating profile or profiles
       if(typeof platforms == 'string'){
-        if(userSaved.platforms) await PublicUser.findByIdAndUpdate(userSaved._id, {
-          platforms: [...userSaved.platforms, platforms]
-        }, {
-          new: true,
-          runValidators: true,
-        }); else await PublicUser.findByIdAndUpdate(userSaved._id, {
-        platforms: platforms
-        }, {
-          new: true,
-          runValidators: true,
-        });
+        const profileToSave = await new Profile({
+          customerId: `${userSaved._id}`,
+          platformId: platforms
+        })
+  
+        profileToSave.save()
+        
       } else {
-        if(userSaved.platforms) await PublicUser.findByIdAndUpdate(userSaved._id, {
-          platforms: [...userSaved.platforms, ...platforms]
-        }, {
-          new: true,
-          runValidators: true,
-        }); else await PublicUser.findByIdAndUpdate(userSaved._id, {
-        platforms: platforms
-        }, {
-          new: true,
-          runValidators: true,
-        });
+        for (let profile of platforms){
+          const profileToSave = await new Profile({
+            customerId: `${userSaved._id}`,
+            platformId: profile
+          })
+    
+          profileToSave.save()
+        }   
       }
       
-      // updating platforms adding the user
-      if(typeof platforms == 'string'){
-        platformResult = await Platform.findById(platforms);
-        if(platformResult.customers) {
-          await Platform.findByIdAndUpdate(platformResult._id, {
-          customers: [...platformResult.customers, userSaved._id ]
-        }, {
-          new: true,
-          runValidators: true,
-        })} else {
-          await Platform.findByIdAndUpdate(platformResult._id, {
-          customers: [ userSaved._id ]
-        }, {
-          new: true,
-          runValidators: true,
-        }) }
-      } else {
-        platforms.map( async platform => {
-          platformResult = await Platform.findById(platform);
-          if(platformResult.customers) {
-            await Platform.findByIdAndUpdate(platformResult._id, {
-            customers: [...platformResult.customers, userSaved._id ]
-          }, {
-            new: true,
-            runValidators: true,
-          })} else {
-            await Platform.findByIdAndUpdate(platformResult._id, {
-            customers: [ userSaved._id ]
-          }, {
-            new: true,
-            runValidators: true,
-          }) } 
-        });
-      }
+      
       //creating order
       const newObject = await new Order(dataOrder);
   

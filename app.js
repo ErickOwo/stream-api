@@ -6,11 +6,12 @@ const multer = require('multer');
 const { v4: uuidv4 } = require('uuid');
 const path = require('path');
 
-// import adminRoures
+// import adminRoutes
 const login = require('./src/routes/login');
 const { verifyToken, verifyPublicToken } = require('./src/routes/validate-token')
 
 const platforms = require('./src/routes/platforms');
+const profiles = require('./src/routes/profiles');
 const auth = require('./src/routes/auth');
 
 // import admin routes
@@ -57,6 +58,7 @@ app.use('/api/auth', verifyToken, auth);
 
 // routes admin
 app.use('/api/admin/platforms', verifyToken, platforms);
+app.use('/api/admin/profiles', verifyToken, profiles);
 app.use('/api/admin/orders', verifyToken, ordersAdmin);
 app.use('/api/admin/users', verifyToken, usersAdmin);
 
