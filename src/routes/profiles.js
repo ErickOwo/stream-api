@@ -7,9 +7,9 @@ const Platform = require('../models/Platform')
 const PublicUser = require('../models/PublicUser')
 const Profile = require('../models/Profile')
 
-router.post("/:platform", async(req, res)=>{
+router.post("/:platformId", async(req, res)=>{
   data = req.body;
-  const { platform } = req.params
+  const { platformId } = req.params
 
   let userSaved = await PublicUser.findOne({email: data.email});
 
@@ -19,7 +19,7 @@ router.post("/:platform", async(req, res)=>{
     const userSaved = await user.save()
     const profile = new Profile({
       customerId: userSaved._id,
-      platformId: platform 
+      platformId 
     })
     profile.save()
     const platform = await Platform.findById(profile.platformId)
@@ -29,7 +29,7 @@ router.post("/:platform", async(req, res)=>{
   } else {
     const profile = new Profile({
       customerId: userSaved._id,
-      platformId: platform 
+      platformId
     })
     profile.save()
     const platform = await Platform.findById(profile.platformId)
