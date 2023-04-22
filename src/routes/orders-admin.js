@@ -42,6 +42,9 @@ router.put('/', async (req, res) => {
       const platform = await Platform.findById(profileToSave.platformId)
       await Platform.findByIdAndUpdate(profileToSave.platformId,{
         profiles: [...platform.profiles, profileToSave._id]
+      },{
+        new: true,
+        runValidators: true,
       })
     }    
 
@@ -257,6 +260,9 @@ router.post('/create', async(req, res)=>{
           const platform = await Platform.findById(profileToSave.platformId)
           await Platform.findByIdAndUpdate(profileToSave.platformId,{
             profiles: [...platform.profiles, profileToSave._id]
+          },{
+            new: true,
+            runValidators: true,
           })
         } else {
           for (let profile of platforms){
@@ -269,6 +275,9 @@ router.post('/create', async(req, res)=>{
             const platform = await Platform.findById(profileToSave.platformId)
             await Platform.findByIdAndUpdate(profileToSave.platformId,{
               profiles: [...platform.profiles, profileToSave._id]
+            },{
+              new: true,
+              runValidators: true,
             })
           }   
         }
@@ -308,6 +317,9 @@ router.post('/create', async(req, res)=>{
         const platform = await Platform.findById(profileToSave.platformId)
         await Platform.findByIdAndUpdate(profileToSave.platformId,{
           profiles: [...platform.profiles, profileToSave._id]
+        },{
+          new: true,
+          runValidators: true,
         })
         
       } else {
@@ -321,6 +333,9 @@ router.post('/create', async(req, res)=>{
           const platform = await Platform.findById(profileToSave.platformId)
           await Platform.findByIdAndUpdate(profileToSave.platformId,{
             profiles: [...platform.profiles, profileToSave._id]
+          },{
+            new: true,
+            runValidators: true,
           })
         }   
       }
