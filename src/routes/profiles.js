@@ -52,7 +52,7 @@ router.delete('/:profile', async (req, res)=>{
   const deletedProfile = await Profile.findByIdAndDelete(profile)
   const platform = await Platform.findById(deletedProfile.platformId)
     await Platform.findByIdAndUpdate(deletedProfile.platformId,{
-      profiles: platform.profiles.filter(profile => profile != deletedProfile)
+      profiles: platform.profiles.filter(profile => {profile != deletedProfile._id})
     },{
       new: true,
       runValidators: true,
