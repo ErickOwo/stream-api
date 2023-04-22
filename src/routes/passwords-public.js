@@ -26,22 +26,6 @@ router.get('/', async (req, res) => {
   }
 });
 
-router.get('/modify', async(req, res)=>{
-  const platforms = await Platform.find()
 
-  
-  for(let platform of platforms){
-    if(platform.customers){
-      for(let customer of platform.customers){
-        const profileToSave = await new Profile({
-          customerId: `${customer}`,
-          platformId: platform._id
-        })
-        await profileToSave.save()
-      }
-    }
-  }
-  res.send('success')
-})
 
 module.exports = router;

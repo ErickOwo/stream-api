@@ -22,12 +22,20 @@ router.post("/:platform", async(req, res)=>{
       platformId: platform 
     })
     profile.save()
+    const platform = await Platform.findById(profile.platformId)
+    await Platform.findByIdAndUpdate(profile.platformId,{
+      profiles: [...platform.profiles, profile._id]
+    })
   } else {
     const profile = new Profile({
       customerId: userSaved._id,
       platformId: platform 
     })
     profile.save()
+    const platform = await Platform.findById(profile.platformId)
+    await Platform.findByIdAndUpdate(profile.platformId,{
+      profiles: [...platform.profiles, profile._id]
+    })
   }
   
   return res.send('New profile created')
@@ -36,7 +44,6 @@ router.post("/:platform", async(req, res)=>{
 router.delete('/:profile', async (req, res)=>{
   const { profile } = req.params
   const deletedProfile = await Profile.findByIdAndDelete(profile)
-  console.log(deletedProfile)
   return res.send('Profile deleted')
 })
 

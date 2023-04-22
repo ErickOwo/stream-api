@@ -39,6 +39,10 @@ router.put('/', async (req, res) => {
       })
 
       profileToSave.save()
+      const platform = await Platform.findById(profileToSave.platformId)
+      await Platform.findByIdAndUpdate(profileToSave.platformId,{
+        profiles: [...platform.profiles, profileToSave._id]
+      })
     }    
 
     //Modificate
@@ -225,8 +229,71 @@ router.post('/create', async(req, res)=>{
     const userSaved = await PublicUser.findOne({email});
     if(!userSaved){ 
       // user unexist
-      console.log('jaja')
-      return res.send({text: 'Order created successfully', type: 'success'})
+      try {
+        let randomEmail = null
+        if(email == '') {
+          if(name=='') return res.send({text: 'Fill the field name', type:'error'}).status(401)
+          // uuid random email
+          let codeuuid = uuidv4()
+          randomEmail = codeuuid.replaceAll('-','')
+          randomEmail = randomEmail.substring(0,9) + '@gmail.com'
+        } 
+        const password = uuidv4()
+        const user = new PublicUser({
+            name, 
+            email: randomEmail || email,
+            phone: phone == '' ? '11111111' : phone,
+            password
+          })
+        const userSaved = await user.save()
+        // creating profile or profiles
+        if(typeof platforms == 'string'){
+          const profileToSave = await new Profile({
+            customerId: `${userSaved._id}`,
+            platformId: platforms
+          })
+    
+          profileToSave.save()
+          const platform = await Platform.findById(profileToSave.platformId)
+          await Platform.findByIdAndUpdate(profileToSave.platformId,{
+            profiles: [...platform.profiles, profileToSave._id]
+          })
+        } else {
+          for (let profile of platforms){
+            const profileToSave = await new Profile({
+              customerId: `${userSaved._id}`,
+              platformId: profile
+            })
+      
+            profileToSave.save()
+            const platform = await Platform.findById(profileToSave.platformId)
+            await Platform.findByIdAndUpdate(profileToSave.platformId,{
+              profiles: [...platform.profiles, profileToSave._id]
+            })
+          }   
+        }
+        //creating order
+        dataOrder.userCustomer  = userSaved._id
+        const newObject = await new Order(dataOrder);
+    
+        const orderSaved= await newObject.save();
+      
+        await Order.findByIdAndUpdate(
+          orderSaved, {
+            accepted: true, 
+            active: true,
+          }, {
+          new: true,
+          runValidators: true,
+        })
+    
+    
+        await fs.unlink(req.file.path);
+        return res.send({text: 'Order created successfully', type: 'success'})
+      } catch (e) {
+        console.log(e)
+        return res.send({text: 'Data incompleted', type: 'error'}).status(400)
+      }
     } else{
        dataOrder.userCustomer  = userSaved._id
 
@@ -238,6 +305,10 @@ router.post('/create', async(req, res)=>{
         })
   
         profileToSave.save()
+        const platform = await Platform.findById(profileToSave.platformId)
+        await Platform.findByIdAndUpdate(profileToSave.platformId,{
+          profiles: [...platform.profiles, profileToSave._id]
+        })
         
       } else {
         for (let profile of platforms){
@@ -247,6 +318,10 @@ router.post('/create', async(req, res)=>{
           })
     
           profileToSave.save()
+          const platform = await Platform.findById(profileToSave.platformId)
+          await Platform.findByIdAndUpdate(profileToSave.platformId,{
+            profiles: [...platform.profiles, profileToSave._id]
+          })
         }   
       }
       
@@ -276,5 +351,6 @@ router.post('/create', async(req, res)=>{
     return res.send({text: 'Order failed', type: 'success'}).status(400)
   }
 })
+
 
 module.exports = router;

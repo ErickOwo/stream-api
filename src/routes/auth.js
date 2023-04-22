@@ -50,4 +50,18 @@ router.post('/signup', async (req, res)=>{
 });
 
 
+const Profile = require('../models/Profile')
+const Platform = require('../models/Platform')
+
+router.post('/modify', async(req, res)=>{
+  try{
+    
+    res.send('success')
+
+  } catch(e) {
+    return res.send({text: e, type: 'error'}).status(400)
+  }
+})
+
+
 module.exports = router;

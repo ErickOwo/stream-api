@@ -18,7 +18,7 @@ const PlatformSchema = new Schema({
     type: Number,
     require: [true, 'type required']
   },
-  customers: {
+  profiles: {
     type: Array
   }
 });

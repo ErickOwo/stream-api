@@ -25,9 +25,6 @@ const publicUserSchema = mongoose.Schema({
     type: String,
     default: 'Guatemala'
   },
-  platforms: {
-    type: Array
-  },
   idRecover: {
     type: String,
     default: null
