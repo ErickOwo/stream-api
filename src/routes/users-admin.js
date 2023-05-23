@@ -32,4 +32,25 @@ router.get('/profiles/:user', async (req, res)=>{
   res.send(platform);
 })
 
+router.post('/users/changedatauser/:id_user', async (req, res) =>{
+  try {
+    const {id_user} = req.params;
+    let idRecover = uuidv4()
+    idChangeData = idRecover.replaceAll('-', `123`)
+
+    const userSaved = await PublicUser.findByIdAndUpdate(id_user, {
+      idChangeData,
+    }, {
+      new: true,
+      runValidators: true,
+    })
+    
+    const info = `Que tal, ${userSaved} Te invitamos a crear tu usuario en la plataforma de stream-play.vercel.app/filluserinfo/${idChangeData}`
+
+    return res.send({text: info, type:'success'})
+  } catch(error) {
+    return res.status(400).json(error);
+  } 
+})
+
 module.exports = router; 

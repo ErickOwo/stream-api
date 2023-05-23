@@ -154,4 +154,26 @@ router.post('/users/changepassword/:recoverid', async (req, res) =>{
   res.send({text: 'Cambio de contraseña completado', type: 'success'})
 })
 
+// fill data of user 
+router.get('/users/filluserinfo/:idChangeData', async (req, res) =>{
+  const { idChangeData } = req.params;
+  
+  const userDB = await PublicUser.findOne({idChangeData})
+  if(!userDB) return res.status(400).json({ error: 'Ha ocurrido un error en la base de datos.' });
+
+  const salt = await bcrypt.genSalt(11);
+  const password = await bcrypt.hash(req.body.password, salt);
+
+  await PublicUser.findByIdAndUpdate(userDB._id, {
+    idRecover: null,
+    dateRecover: null,
+    password
+  }, {
+    new: true,
+    runValidators: true,
+  })
+
+  res.send({text: 'Cambio de contraseña completado', type: 'success'})
+})
+
 module.exports = router;

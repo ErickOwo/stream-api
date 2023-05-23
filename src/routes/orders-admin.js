@@ -40,12 +40,6 @@ router.put('/', async (req, res) => {
 
       profileToSave.save()
       const platform = await Platform.findById(profileToSave.platformId)
-      await Platform.findByIdAndUpdate(profileToSave.platformId,{
-        profiles: [...platform.profiles, profileToSave._id]
-      },{
-        new: true,
-        runValidators: true,
-      })
     }    
 
     //Modificate
@@ -257,13 +251,6 @@ router.post('/create', async(req, res)=>{
           })
     
           profileToSave.save()
-          const platform = await Platform.findById(profileToSave.platformId)
-          await Platform.findByIdAndUpdate(profileToSave.platformId,{
-            profiles: [...platform.profiles, profileToSave._id]
-          },{
-            new: true,
-            runValidators: true,
-          })
         } else {
           for (let profile of platforms){
             const profileToSave = await new Profile({
@@ -272,13 +259,7 @@ router.post('/create', async(req, res)=>{
             })
       
             profileToSave.save()
-            const platform = await Platform.findById(profileToSave.platformId)
-            await Platform.findByIdAndUpdate(profileToSave.platformId,{
-              profiles: [...platform.profiles, profileToSave._id]
-            },{
-              new: true,
-              runValidators: true,
-            })
+            
           }   
         }
         //creating order
@@ -315,12 +296,6 @@ router.post('/create', async(req, res)=>{
   
         profileToSave.save()
         const platform = await Platform.findById(profileToSave.platformId)
-        await Platform.findByIdAndUpdate(profileToSave.platformId,{
-          profiles: [...platform.profiles, profileToSave._id]
-        },{
-          new: true,
-          runValidators: true,
-        })
         
       } else {
         for (let profile of platforms){
@@ -330,13 +305,7 @@ router.post('/create', async(req, res)=>{
           })
     
           profileToSave.save()
-          const platform = await Platform.findById(profileToSave.platformId)
-          await Platform.findByIdAndUpdate(profileToSave.platformId,{
-            profiles: [...platform.profiles, profileToSave._id]
-          },{
-            new: true,
-            runValidators: true,
-          })
+
         }   
       }
       

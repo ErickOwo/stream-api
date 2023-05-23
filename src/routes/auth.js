@@ -55,8 +55,20 @@ const Platform = require('../models/Platform')
 
 router.post('/modify', async(req, res)=>{
   try{
+    const profiles = await Profile.find()
+    const platforms = await Platform.find()
+
     
-    res.send('success')
+
+    platforms.forEach(async platform =>{ 
+      await Platform.findByIdAndUpdate(platform._id, {
+        profiles: []
+      },{
+        new: true,
+        runValidators: true
+      })
+    })
+    res.send(platforms)
 
   } catch(e) {
     return res.send({text: e, type: 'error'}).status(400)

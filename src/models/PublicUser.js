@@ -32,6 +32,10 @@ const publicUserSchema = mongoose.Schema({
   dateRecover: {
     type: Date,
     default: null
+  },
+  idChangeData: {
+    type: String,
+    default: null
   }
 })
 
