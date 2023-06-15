@@ -101,7 +101,14 @@ router.get('/rejected', async (req, res) => {
 })
 
 router.get('/accepted', async (req, res) => {
-  const orders = await Order.find({accepted: true});
+  const orders = await Order.find({accepted: true}).populate(
+    'userCustomer',
+    {
+      name: 1,
+      email: 1,
+      phone: 1
+    }
+  )
   res.json(orders)
 })
 

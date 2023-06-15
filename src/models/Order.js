@@ -3,7 +3,8 @@ const { Schema } = require("mongoose");
 
 const OrderSchema = new Schema({
   userCustomer: {
-    type: String,
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'PublicUser'
   },
   orderNumber: {
     type: String,
@@ -57,10 +58,10 @@ const OrderSchema = new Schema({
     default: false,
   },
   startDate: {
-    type: String,
+    type: Date,
   },
   endDate: {
-    type: String,
+    type: Date,
   },
 });
 
