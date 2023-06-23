@@ -39,4 +39,20 @@ router.delete('/:profile', async (req, res)=>{
   return res.send('Profile deleted')
 })
 
+router.put("/alias", async (req, res)=>{
+  try {
+    const {id, alias} = req.body
+    if(alias.trim() == "") return res.send({type: 'error', text: "No puedes dejar el campo vacio."})
+    await Profile.findByIdAndUpdate(id,{
+      alias
+    },{
+      new: true,
+      runValidators: true
+    })
+    return res.send({type: 'success', text: "Alias asignado exitosamente."})
+  } catch(e){
+    res.send({type: 'error', text: "Ah ocurrido un error."}).status(400)
+  }
+})
+
 module.exports = router;
