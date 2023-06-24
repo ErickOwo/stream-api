@@ -17,8 +17,9 @@ router.get('/user/:user', async (req, res) => {
 })
 
 router.get('/orders/:user', async (req, res)=>{
-  const order = await Order.find({userCustomer: req.params.user});
-  res.send(order);
+  const orders = await Order.find()
+  ordersClear = orders.filter(order => order.userCustomer == req.params.user)
+  res.send(ordersClear);
 })
 
 router.get('/profiles/:user', async (req, res)=>{
