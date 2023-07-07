@@ -51,7 +51,7 @@ router.post('/', async (req, res) => {
         primeProfiles * (25 - descount) +
         paramountProfiles * (25 - descount) +
         starProfiles * (25 - descount) +
-        spotifyProfiles * (30 - descount) +
+        spotifyProfiles * (35 - descount) +
         netflixProfiles * (40 - descount);
       return platforms * months;
     };
