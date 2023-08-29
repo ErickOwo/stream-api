@@ -15,7 +15,8 @@ router.get('/', async (req, res) => {
     .populate('platformId',{
       type: 1,
       email: 1,
-      password: 1
+      password: 1,
+      spotify: 1
     }, )
 
     return res.send(profiles);  

@@ -20,6 +20,9 @@ const PlatformSchema = new Schema({
   },
   profiles: {
     type: Array
+  },
+  spotify: {
+    type: Boolean
   }
 });
 
