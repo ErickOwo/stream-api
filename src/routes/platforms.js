@@ -18,8 +18,11 @@ router.get('/', async (req, res)=>{
 
 router.get('/asign', async (req, res)=>{
   try{
-    const platforms = await Platform.find();
-    
+    const platforms = await Platform.find()
+    // .populate('profile',
+    // {
+    //   alias: 1,
+    // });
     return res.json(platforms);
   } catch(error) {
     return res.status(400).json({ success: false, error });
