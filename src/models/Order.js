@@ -39,7 +39,13 @@ const OrderSchema = new Schema({
   imgURL: {
     type: String,
   },
+  imgRequest: {
+    type: String,
+  },
   public_id: {
+    type: String,
+  },
+  public_id_Request: {
     type: String,
   },
   pending: {

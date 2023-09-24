@@ -67,11 +67,6 @@ router.post('/', async (req, res) => {
        }
 
     let bank;
-    
-    if(bankCode == 3) bank = 'BAC';
-    else if(bankCode == 2) bank = 'BI';
-    else if(bankCode == 1) bank = 'Bantrab';
-    else bank = 'Banrural';
 
     const result = await addImage(req.file.path, 'Stream Play/orders')
     

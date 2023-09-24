@@ -23,6 +23,7 @@ const usersPublic = require('./src/routes/users-public');
 const ordersPublic = require('./src/routes/orders-public');
 const passwordsPublic = require('./src/routes/passwords-public');
 const payPublic = require('./src/routes/pay');
+const updatepay = require('./src/routes/updatepay');
 
 // initializing express and setting port
 const app = express();
@@ -66,6 +67,7 @@ app.use('/api/admin/users', verifyToken, usersAdmin);
 // public routres
 app.use('/api/public', usersPublic);
 app.use('/api/public', payPublic);
+app.use('/api/public/updatepay', updatepay)
 app.use('/api/public/orders',verifyPublicToken, ordersPublic);
 app.use('/api/public/passwords', verifyPublicToken, passwordsPublic);
 
