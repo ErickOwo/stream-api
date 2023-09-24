@@ -112,7 +112,7 @@ router.get('/accepted', async (req, res) => {
   res.json(orders)
 })
 router.get('/noactive', async (req, res) => {
-  const orders = await Order.find({active: false}).populate(
+  const orders = await Order.find({active: false, accepted: true}).populate(
     'userCustomer',
     {
       name: 1,
