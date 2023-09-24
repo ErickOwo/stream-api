@@ -96,7 +96,14 @@ router.get('/nopending', async (req, res) => {
 })
 
 router.get('/rejected', async (req, res) => {
-  const orders = await Order.find({accepted: false});
+  const orders = await Order.find({accepted: false}).populate(
+    'userCustomer',
+    {
+      name: 1,
+      email: 1,
+      phone: 1
+    }
+  );
   res.json(orders)
 })
 
