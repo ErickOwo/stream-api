@@ -11,7 +11,7 @@ const Platform = require('../models/Platform')
 const Profile = require('../models/Profile')
 
 router.get('/pending', async (req, res) => {
-  const orders = await Order.find({pending: true});
+  const orders = await Order.find({pending: true, active: null});
   res.json(orders)
 })
 
@@ -101,7 +101,18 @@ router.get('/rejected', async (req, res) => {
 })
 
 router.get('/accepted', async (req, res) => {
-  const orders = await Order.find({accepted: true}).populate(
+  const orders = await Order.find({active: true}).populate(
+    'userCustomer',
+    {
+      name: 1,
+      email: 1,
+      phone: 1
+    }
+  )
+  res.json(orders)
+})
+router.get('/noactive', async (req, res) => {
+  const orders = await Order.find({active: false}).populate(
     'userCustomer',
     {
       name: 1,
@@ -134,6 +145,7 @@ router.patch('/:order', async (req, res) => {
     {
       pending: false,
       accepted: false,
+      active: false
     },{
       new: true,
       runValidators: true,
@@ -167,6 +179,9 @@ router.patch('/update/:order', async(req, res)=>{
       endDate: new Date(req.body.endDate),
       imgURL: result.url,
       public_id: result.public_id, 
+      accepted: true,
+      pending: false,
+      active: true
     }, {
       new: true,
       runValidators: true,
@@ -201,13 +216,7 @@ router.post('/create', async(req, res)=>{
       netflixProfiles,
       spotifyProfiles
     }  = dataToRead
-  
-    let bank;
-      
-    if(bankCode == 3) bank = 'BAC';
-    else if(bankCode == 2) bank = 'BI';
-    else if(bankCode == 1) bank = 'Bantrab';
-    else bank = 'Banrural';
+ 
   
     const result = await addImage(req.file.path, 'Stream Play/orders')
   
@@ -222,7 +231,7 @@ router.post('/create', async(req, res)=>{
       netflixProfiles,
       spotifyProfiles,
       months,
-      bank,
+      bank: bankCode,
       imgURL: result.url,
       public_id: result.public_id, 
       total,
@@ -343,5 +352,57 @@ router.post('/create', async(req, res)=>{
   }
 })
 
+router.put("/desactive/:idOrder", async (req,res)=>{
+  const {idOrder} = req.params;
+  await Order.findByIdAndUpdate(idOrder,{
+    active: false
+  },{
+    new: true,
+    runValidators: true
+  })
+  return res.send({text: 'Changes realized successfully', type: 'success'})
+})
+router.put('/acceptpayment/:order', async(req, res)=>{
+  const orderID = req.params.order
+  const orderDB = await Order.findById(orderID)
+  await deleteImage(orderDB.public_id);
+  await Order.findByIdAndUpdate(
+    orderDB._id,
+    {
+      startDate: new Date(req.body.startDate),
+      endDate: new Date(req.body.endDate),
+      imgURL: orderDB.imgRequest,
+      public_id: orderDB.public_id_Request, 
+      accepted: true,
+      pending: false,
+      active: true,
+      imgRequest: null,
+      public_id_Request: null
+    }, {
+      new: true,
+      runValidators: true,
+    }
+  )
+  return res.send({text: 'Changes realized successfully', type: 'success'})
+})
+
+router.put('/rejectpayment/:idOrder', async (req, res)=>{
+  try {
+    const {idOrder} = req.params
+    const orderDB = await Order.findById(idOrder)
+    await deleteImage(orderDB.public_id_Request)
+    await Order.findByIdAndUpdate(idOrder,{
+      imgRequest: null,
+      public_id_Request: null,
+      pending: false
+    },{
+      runValidators: true,
+      new: true
+    })
+    return res.send({text: 'Changes realized successfully', type: 'success'})
+  } catch (e) {
+    return res.status(404).send({text: 'API failed', type: 'error'})
+  }
+})
 
 module.exports = router;
