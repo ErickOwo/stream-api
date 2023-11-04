@@ -16,7 +16,6 @@ router.get("/get/:orderNumber",async(req,res)=>{
       name: 1,
     }
   )
-  console.log(order)
   return res.send(order)
 })
 

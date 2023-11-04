@@ -16,9 +16,11 @@ const auth = require('./src/routes/auth');
 
 // import admin routes
 const ordersAdmin = require('./src/routes/orders-admin');
-const usersAdmin = require('./src/routes/users-admin'); 
+const usersAdmin = require('./src/routes/users-admin');
+const accounts = require('./src/routes/accounts'); 
 
 // import public routes
+const assets = require('./src/routes/assets')
 const usersPublic = require('./src/routes/users-public');
 const ordersPublic = require('./src/routes/orders-public');
 const passwordsPublic = require('./src/routes/passwords-public');
@@ -63,8 +65,10 @@ app.use('/api/admin/platforms', verifyToken, platforms);
 app.use('/api/admin/profiles', verifyToken, profiles);
 app.use('/api/admin/orders', verifyToken, ordersAdmin);
 app.use('/api/admin/users', verifyToken, usersAdmin);
+app.use('/api/admin/accounts', verifyToken, accounts);
 
 // public routres
+app.use('/api/public/assets', assets)
 app.use('/api/public', usersPublic);
 app.use('/api/public', payPublic);
 app.use('/api/public/updatepay', updatepay)

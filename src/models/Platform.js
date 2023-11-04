@@ -14,15 +14,9 @@ const PlatformSchema = new Schema({
     type: String,
     required: [true, 'password required']
   },
-  type: {
-    type: Number,
-    require: [true, 'type required']
-  },
-  profiles: {
-    type: Array
-  },
-  spotify: {
-    type: Boolean
+  Type: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Platform'
   }
 });
 

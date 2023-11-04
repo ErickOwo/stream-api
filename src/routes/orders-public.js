@@ -47,10 +47,10 @@ router.post('/', async (req, res) => {
       const descount = months == 2 ? 5 : months == 4 ? 10 : 0;
       const platforms =
         disneyProfiles * (25 - descount) +
-        hboProfiles * (25 - descount) +
-        primeProfiles * (25 - descount) +
+        hboProfiles * (30 - descount) +
+        primeProfiles * (30 - descount) +
         paramountProfiles * (25 - descount) +
-        starProfiles * (25 - descount) +
+        starProfiles * (30 - descount) +
         spotifyProfiles * (35 - descount) +
         netflixProfiles * (40 - descount);
       return platforms * months;
