@@ -53,5 +53,14 @@ router.patch('/',async(req, res)=>{
   }
 })
 
+router.get("/types",async(req,res)=>{
+  try{
+    const accounts = await Account.find();
+    res.json(accounts);
+  } catch(error){
+    res.json(error);
+  }
+})
+
 
 module.exports = router;
