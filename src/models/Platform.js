@@ -14,7 +14,7 @@ const PlatformSchema = new Schema({
     type: String,
     required: [true, 'password required']
   },
-  Type: {
+  type: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Platform'
   }
