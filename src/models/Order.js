@@ -30,6 +30,9 @@ const OrderSchema = new Schema({
   spotifyProfiles: {
     type: Number,
   },
+  crunchyrollProfiles: {
+    type: Number,
+  },
   months: {
     type: Number,
   },
