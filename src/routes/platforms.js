@@ -46,6 +46,7 @@ router.get('/:platform_id', async (req, res)=>{
 
     const customers = await Profile.find({platformId : platform._id})
     .populate('customerId',{
+      _id: 1,
       name: 1,
       email: 1,
       phone: 1

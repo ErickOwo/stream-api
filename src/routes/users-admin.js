@@ -12,8 +12,13 @@ router.get('/', async (req, res) => {
 })
 
 router.get('/user/:user', async (req, res) => {
-  const user = await PublicUser.findById(req.params.user);
-  return res.send(user);
+  try{
+    const user = await PublicUser.findById(req.params.user);
+    return res.send(user);
+  } 
+  catch {
+    res.send("").status(400)
+  }
 })
 
 router.get('/orders/:user', async (req, res)=>{
@@ -25,10 +30,11 @@ router.get('/orders/:user', async (req, res)=>{
 router.get('/profiles/:user', async (req, res)=>{
   const platform = await Profile.find({customerId: req.params.user})
     .populate('platformId',{
+      _id: 1,
       title: 1,
       type: 1,
       email: 1,
-      password: 1
+      password: 1,
     }, )
   res.send(platform);
 })
