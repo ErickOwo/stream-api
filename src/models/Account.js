@@ -26,6 +26,6 @@ const AccountSchema = new Schema({
     type: Number,
     required: [true, 'Por favor ingrese un size Y'],
   },
-});
+}, {strict: true});
 
 module.exports = mongoose.models.Account || mongoose.model('Account', AccountSchema);

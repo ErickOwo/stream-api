@@ -18,6 +18,6 @@ const PlatformSchema = new Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Platform'
   }
-});
+},{strict:true});
 
 module.exports = mongoose.models.Platform || mongoose.model('Platform', PlatformSchema);

@@ -51,7 +51,7 @@ router.post('/', async (req, res) => {
         disneyProfiles * (30 - descount) +
         hboProfiles * (30 - descount) +
         primeProfiles * (30 - descount) +
-        paramountProfiles * (25 - descount) +
+        paramountProfiles * (30 - descount) +
         starProfiles * (30 - descount) +
         spotifyProfiles * (35 - descount) +
         crunchyrollProfiles * (35 - descount) +
