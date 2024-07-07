@@ -24,6 +24,9 @@ const OrderSchema = new Schema({
   starProfiles: {
     type: Number,
   },
+  vixProfiles: {
+    type: Number,
+  },
   netflixProfiles: {
     type: Number,
   },

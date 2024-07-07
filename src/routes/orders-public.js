@@ -37,6 +37,7 @@ router.post('/', async (req, res) => {
       primeProfiles,
       paramountProfiles,
       starProfiles,
+      vixProfiles,
       netflixProfiles,
       spotifyProfiles,
       crunchyrollProfiles,
@@ -47,14 +48,15 @@ router.post('/', async (req, res) => {
     const total = () => {
       const descount = months == 2 ? 5 : months == 4 ? 10 : 0;
       const platforms =
-        disneyProfiles * (25 - descount) +
+        disneyProfiles * (30 - descount) +
         hboProfiles * (30 - descount) +
         primeProfiles * (30 - descount) +
         paramountProfiles * (25 - descount) +
         starProfiles * (30 - descount) +
         spotifyProfiles * (35 - descount) +
         crunchyrollProfiles * (35 - descount) +
-        netflixProfiles * (40 - descount);
+        vixProfiles * (30 - descount) +
+        netflixProfiles * (50 - descount);
       return platforms * months;
     };
 
@@ -83,6 +85,7 @@ router.post('/', async (req, res) => {
       netflixProfiles,
       spotifyProfiles,
       crunchyrollProfiles,
+      vixProfiles,
       months,
       bank,
       imgURL: result.url,

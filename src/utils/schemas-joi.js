@@ -33,7 +33,7 @@ const schemaOrders = Joi.object({
   hboProfiles: Joi.number().required(),
   primeProfiles: Joi.number().required(),
   paramountProfiles: Joi.number().required(),
-  starProfiles: Joi.number().required(),
+  vixProfiles: Joi.number().required(),
   spotifyProfiles: Joi.number().required(),
   crunchyrollProfiles: Joi.number().required(),
   netflixProfiles: Joi.number().required(),

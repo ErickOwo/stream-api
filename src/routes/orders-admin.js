@@ -221,7 +221,8 @@ router.post('/create', async(req, res)=>{
       paramountProfiles,
       starProfiles,
       netflixProfiles,
-      spotifyProfiles
+      spotifyProfiles,
+      vixProfiles,
     }  = dataToRead
  
   
@@ -235,6 +236,7 @@ router.post('/create', async(req, res)=>{
       primeProfiles,
       paramountProfiles,
       starProfiles,
+      vixProfiles,
       netflixProfiles,
       spotifyProfiles,
       months,
