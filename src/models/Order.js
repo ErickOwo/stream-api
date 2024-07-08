@@ -75,6 +75,6 @@ const OrderSchema = new Schema({
   endDate: {
     type: Date,
   },
-}, {strict: true});
+});
 
 module.exports = mongoose.models.Order || mongoose.model('Order', OrderSchema);

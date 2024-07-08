@@ -14,6 +14,6 @@ const ProfileSchema = new Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'PublicUser'
   }
-}, {strict: true});
+});
 
 module.exports = mongoose.models.Profile || mongoose.model('Profile', ProfileSchema);

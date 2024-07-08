@@ -18,6 +18,6 @@ const MailSchema = new Schema({
     type: String,
     required: [true, 'Por favor ingrese su mensajes'],
   }
-},{strict: true});
+});
 
 module.exports = mongoose.models.Mail || mongoose.model('Mail', MailSchema)

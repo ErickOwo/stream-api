@@ -39,6 +39,7 @@ const uri = `mongodb+srv://${process.env.USER}:${process.env.PASSWORD}@cluster0.
 mongoose.connect(uri, {useNewUrlParser: true}).then(res =>{
   console.log('data base connected');
 })
+mongoose.set('strictQuery', true)
 
 // Midlewares
 app.use(cors());
